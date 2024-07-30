@@ -1,0 +1,10 @@
+
+services:
+  app:
+    container_name: ms-videos-ts-app
+    build: .
+    command: ./.docker/start.sh
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/home/node/app
