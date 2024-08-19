@@ -1,36 +1,44 @@
 import { randomUUID } from "crypto"
 import { Category } from "./category"
+import { Uuid } from "../value-objects/uuid.vo"
 
 describe('Category Unit Tests', () => {
     it('create category', () => {
-        const id = randomUUID()
-        const now = new Date()
-
         const category = Category.create({
+            name: 'Movie',
+            description: 'categoria de filmes',
+            isActive: true,
+        })
+
+        expect(category).toBeInstanceOf(Category)
+        expect(category.id.value).toEqual(expect.any(String))
+        expect(category.name).toEqual('Movie')
+        expect(category.description).toEqual('categoria de filmes')
+        expect(category.isActive).toBe(true)
+    })
+
+    it('should be able to create a new category when pass id', () => {
+        const id = Uuid.create()
+        const category = new Category({
             id,
             name: 'Movie',
             description: 'categoria de filmes',
             isActive: true,
-            createdAt: now
         })
 
         expect(category).toBeInstanceOf(Category)
-        expect(category.id).toEqual(id)
+        expect(category.id.value).toEqual(id.value)
         expect(category.name).toEqual('Movie')
         expect(category.description).toEqual('categoria de filmes')
-        expect(category.createdAt).toEqual(now)
+        expect(category.isActive).toBe(true)
+        expect(category.createdAt?.getMilliseconds()).toBeLessThanOrEqual(new Date().getMilliseconds())
     })
 
     it('should be able to active a category', () => {
-        const id = randomUUID()
-        const now = new Date()
-
         const category = Category.create({
-            id,
             name: 'Movie',
             description: 'categoria de filmes',
             isActive: false,
-            createdAt: now
         })
 
         expect(category.isActive).toEqual(false)
@@ -39,15 +47,10 @@ describe('Category Unit Tests', () => {
     })
 
     it('should be able to deactivate a category', () => {
-        const id = randomUUID()
-        const now = new Date()
-
         const category = Category.create({
-            id,
             name: 'Movie',
             description: 'categoria de filmes',
             isActive: true,
-            createdAt: now
         })
 
         expect(category.isActive).toEqual(true)
@@ -56,15 +59,10 @@ describe('Category Unit Tests', () => {
     })
 
     it('should be able to change category name', () => {
-        const id = randomUUID()
-        const now = new Date()
-
         const category = Category.create({
-            id,
             name: 'Movie',
             description: 'categoria de filmes',
             isActive: true,
-            createdAt: now
         })
 
         expect(category.name).toEqual("Movie")
@@ -73,15 +71,10 @@ describe('Category Unit Tests', () => {
     })
 
     it('should be able to change category description', () => {
-        const id = randomUUID()
-        const now = new Date()
-
         const category = Category.create({
-            id,
             name: 'Movie',
             description: 'categoria de filmes',
             isActive: true,
-            createdAt: now
         })
 
         expect(category.description).toEqual("categoria de filmes")

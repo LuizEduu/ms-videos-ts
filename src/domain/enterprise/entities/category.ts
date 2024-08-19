@@ -1,30 +1,28 @@
-import { randomUUID } from "crypto"
+import { Uuid } from "../value-objects/uuid.vo"
 
 export type CategoryProps = {
-    id?: string
+    id?: Uuid
     name: string
     description: string | null
     isActive: boolean
-    createdAt: Date
+    createdAt?: Date
 }
 
 export type CategoryCreateCommand = {
-    id?: string
     name: string
     description: string
     isActive: boolean
-    createdAt: Date
 }
 
 export class Category {
-    id?: string
+    id: Uuid
     name: string
     description?: string | null
     isActive?: boolean
     createdAt?: Date
 
-    private constructor(props: CategoryProps) {
-        this.id = props.id ?? randomUUID()
+    constructor(props: CategoryProps) {
+        this.id = props.id ?? Uuid.create()
         this.name = props.name
         this.description = props.description
         this.isActive = props.isActive ?? true
@@ -53,7 +51,7 @@ export class Category {
 
     toJSON() {
         return {
-            id: this.id,
+            id: this.id.value,
             name: this.name,
             description: this.description,
             isActive: this.isActive,

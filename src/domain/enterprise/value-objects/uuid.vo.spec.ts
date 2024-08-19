@@ -27,7 +27,7 @@ describe('Uuid unit tests', () => {
         const existsId = randomUUID()
         const uuid = new Uuid(existsId)
 
-        expect(uuid.id).toEqual(existsId)
+        expect(uuid.value).toEqual(existsId)
         expect(validateSpy).toHaveBeenCalledTimes(1)
     })
 })
