@@ -1,4 +1,5 @@
 import { CategoryValidatorFactory } from "../validators/category.validator"
+import { EntityValidationError } from "../validators/errors/validation.error"
 import { Uuid } from "../value-objects/uuid.vo"
 
 export type CategoryProps = {
@@ -57,7 +58,11 @@ export class Category {
     static validate(entity: Category) {
         const validator = CategoryValidatorFactory.create()
 
-        validator.validate(entity)
+        const isValid = validator.validate(entity)
+
+        if(!isValid && validator.errors) {
+            throw new EntityValidationError(validator.errors)
+        }
     }
 
     toJSON() {

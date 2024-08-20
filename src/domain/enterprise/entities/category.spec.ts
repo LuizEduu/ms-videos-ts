@@ -1,8 +1,15 @@
-import { randomUUID } from "crypto"
 import { Category } from "./category"
 import { Uuid } from "../value-objects/uuid.vo"
+import { MockInstance } from "vitest"
+import { EntityValidationError } from "../validators/errors/validation.error"
 
 describe('Category Unit Tests', () => {
+    let validateSpy: MockInstance
+    
+    beforeEach(() => {
+        validateSpy = vitest.spyOn(Category, "validate")
+    })
+
     it('create category', () => {
         const category = Category.create({
             name: 'Movie',
@@ -15,6 +22,7 @@ describe('Category Unit Tests', () => {
         expect(category.name).toEqual('Movie')
         expect(category.description).toEqual('categoria de filmes')
         expect(category.isActive).toBe(true)
+        expect(validateSpy).toHaveBeenCalledTimes(1)
     })
 
     it('should be able to create a new category when pass id', () => {
@@ -68,6 +76,7 @@ describe('Category Unit Tests', () => {
         expect(category.name).toEqual("Movie")
         category.changeName("Series")
         expect(category.name).toEqual("Series")
+        expect(validateSpy).toHaveBeenCalledTimes(2)
     })
 
     it('should be able to change category description', () => {
@@ -80,5 +89,25 @@ describe('Category Unit Tests', () => {
         expect(category.description).toEqual("categoria de filmes")
         category.changeDescription("categorias de series mais assistidas")
         expect(category.description).toEqual("categorias de series mais assistidas")
+        expect(validateSpy).toHaveBeenCalledTimes(2)
+    })
+})
+
+describe('Create command', () => {
+    let validateSpy: MockInstance
+
+    beforeEach(() => {
+        validateSpy = vitest.spyOn(Category, 'validate')
+    })
+    
+    it('should be able to throws error when category create command name is invalid', () => {
+        expect(() => {
+            Category.create({
+                name: null as any,
+                description: 'teste',
+                isActive: false
+            })
+        }).toThrowError(EntityValidationError)
+        expect(validateSpy).toHaveBeenCalledTimes(1)
     })
 })
