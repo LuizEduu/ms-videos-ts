@@ -13,6 +13,8 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "moduleResolution": "node16",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "paths": {
       "@/*": [
         "./src/*"

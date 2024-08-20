@@ -1,3 +1,4 @@
+import { CategoryValidatorFactory } from "../validators/category.validator"
 import { Uuid } from "../value-objects/uuid.vo"
 
 export type CategoryProps = {
@@ -30,15 +31,19 @@ export class Category {
     }
 
     static create(props: CategoryCreateCommand): Category {
-        return new Category(props)
+        const category = new Category(props)
+        Category.validate(category)
+        return category
     }
 
     changeName(name: string): void {
         this.name = name
+        Category.validate(this)
     }
 
     changeDescription(description: string): void {
         this.description = description
+        Category.validate(this)
     }
 
     activate() {
@@ -47,6 +52,12 @@ export class Category {
 
     deactivate() {
         this.isActive = false
+    }
+
+    static validate(entity: Category) {
+        const validator = CategoryValidatorFactory.create()
+
+        validator.validate(entity)
     }
 
     toJSON() {
