@@ -98,27 +98,43 @@ describe("Category Unit Tests", () => {
 });
 
 describe("Create command", () => {
-  describe("Create command", () => {
-    let validateSpy: MockInstance;
-
-    beforeEach(() => {
-      validateSpy = vitest.spyOn(Category, "validate");
+  it("should not be able to create a category when name property is invalid", () => {
+    expect(() =>
+      Category.create({
+        isActive: true,
+        description: "any_description",
+        name: null as any,
+      })
+    ).containsErrorMessage({
+      name: [
+        "name should not be empty",
+        "name must be a string",
+        "name must be shorter than or equal to 255 characters",
+      ],
     });
+  });
 
-    it("should not be able to create a category when name property is invalid", () => {
-      expect(() =>
-        Category.create({
-          isActive: true,
-          description: "any_description",
-          name: null as any,
-        })
-      ).containsErrorMessage({
-        name: [
-          "name should not be empty",
-          "name must be a string",
-          "name must be shorter than or equal to 255 characters",
-        ],
-      });
+  it("should not be able to create a category when name property is empty", () => {
+    expect(() =>
+      Category.create({
+        isActive: true,
+        description: "any_description",
+        name: "",
+      })
+    ).containsErrorMessage({
+      name: ["name should not be empty"],
+    });
+  });
+
+  it("should not be able to create a category when name property is bigger 255 characters", () => {
+    expect(() =>
+      Category.create({
+        isActive: true,
+        description: "any_description",
+        name: "aaa".repeat(300),
+      })
+    ).containsErrorMessage({
+      name: ["name must be shorter than or equal to 255 characters"],
     });
   });
 });
