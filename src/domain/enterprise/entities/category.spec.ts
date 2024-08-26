@@ -137,4 +137,56 @@ describe("Create command", () => {
       name: ["name must be shorter than or equal to 255 characters"],
     });
   });
+
+  it("should not be able to create a category when description property is invalid", () => {
+    expect(() =>
+      Category.create({
+        isActive: true,
+        description: null as any,
+        name: "John Doe",
+      })
+    ).containsErrorMessage({
+      name: [
+        "description should not be empty",
+        "description must be a string",
+        "description must be shorter than or equal to 255 characters",
+      ],
+    });
+  });
+
+  it("should not be able to create a category when description property is empty", () => {
+    expect(() =>
+      Category.create({
+        isActive: true,
+        description: "",
+        name: "John Doe",
+      })
+    ).containsErrorMessage({
+      name: ["description should not be empty"],
+    });
+  });
+
+  it("should not be able to create a category when description property is bigger 255 characters", () => {
+    expect(() =>
+      Category.create({
+        isActive: true,
+        description: "aaa".repeat(300),
+        name: "John Doe",
+      })
+    ).containsErrorMessage({
+      name: ["description must be shorter than or equal to 255 characters"],
+    });
+  });
+
+  it("should not be able to create a category when isActive invalid", () => {
+    expect(() =>
+      Category.create({
+        name: "Filmes",
+        description: "Filmes mais assistidos",
+        isActive: 1 as any,
+      })
+    ).containsErrorMessage({
+      isActive: ["isActive must be a boolean value"],
+    });
+  });
 });
